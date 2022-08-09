@@ -1,0 +1,61 @@
+<odoo>
+    <data>
+        <!-- Inherit Form View to Modify it Check In Journal -->
+        <record id="univ_account_journal" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="is_check"/>
+                    <field name="check_journal" attrs="{'invisible': [('is_check', '=', False)]}"/>
+                    <field name="account_id" attrs="{'invisible': [('is_check', '=', False)]}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_CheckInPayment_form_univ" model="ir.ui.view">
+            <field name="name">view_account_payment_form_inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <field name="is_check" invisible="1"/>
+                    <button name="run_for_paid" class="oe_stat_button"
+                            type="object" icon="fa-print">
+                        <div class="o_stat_info o_field_widget">
+                            <span class="text-success">Paid</span>
+                            <span class="o_stat_text">Check</span>
+                        </div>
+                    </button>
+                </xpath>
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <label for="check_py_date"/>
+                    <div name="check_py_date">
+                        <field name="check_py_date" class="oe_inline text-primary" attrs="{'readonly': [('is_paid', '=', True)]}"/>
+                        <button class="btn btn-secondary button_me" style="margin-left: 10px;" name="set_date"
+                                icon="fa-calendar text-success" type="object"
+                                attrs="{'invisible':['|', ('check_py_date','!=', False), ('is_check', '=', False)]}">
+                        </button>
+                    </div>
+                    <field name="is_paid" class="text-primary" readonly="1"
+                           attrs="{'invisible': [('is_check', '=', False)]}" />
+                    <field name="rec_check" class="text-primary" readonly="1"
+                           attrs="{'invisible': [('is_paid', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_CheckInPayment_tree_univ" model="ir.ui.view">
+            <field name="name">view_account_payment_tree_inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="is_paid" string="Ch Paid" optional="show"/>
+                    <field name="check_py_date" string="Date Paid" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
